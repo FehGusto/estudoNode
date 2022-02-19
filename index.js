@@ -1,6 +1,16 @@
 const chalk = require('chalk');
 const fs = require('fs');
 
+function extraiText(texto) {
+  const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
+  const result = [];
+  let temp;
+  while((temp = regex.exec(texto)) !== null) {
+    result.push({ [temp[1]]: temp[2] })
+  }
+  return result;
+}
+
 function tratErro(erro) {
   throw new Error(chalk.red(erro.code, 'Não existe'));
 }
@@ -9,7 +19,7 @@ async function cacthArquiv(caminhArquivo) {
   const enconding = 'utf-8'
   try {
     const texto = await fs.promises.readFile(caminhArquivo, enconding)
-    console.log(chalk.green(texto))  
+    console.log(extraiText(texto))
   } catch(erro) {
     tratErro(erro);
   }
