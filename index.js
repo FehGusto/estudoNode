@@ -1,48 +1,28 @@
 const chalk = require('chalk');
 const fs = require('fs');
 
-function extraiText(texto) {
+function extraiLinks(texto) {
   const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
-  const result = [];
+  const arrayResultados = [];
   let temp;
   while((temp = regex.exec(texto)) !== null) {
-    result.push({ [temp[1]]: temp[2] })
+    arrayResultados.push({ [temp[1]]: temp[2] })
   }
-  return result.length === 0 ? 'Sem resultados' : result;
+  return arrayResultados.length === 0 ? 'não há links' : arrayResultados;
 }
 
-function tratErro(erro) {
-  throw new Error(chalk.red(erro.code, 'Não existe'));
+function trataErro(erro) {
+  throw new Error(chalk.red(erro.code, 'não há arquivo no caminho'));
 }
 
-async function cacthArquiv(caminhArquivo) {
-  const enconding = 'utf-8'
+async function pegaArquivo(caminhoDoArquivo) {
+  const encoding = 'utf-8';
   try {
-    const texto = await fs.promises.readFile(caminhArquivo, enconding)
-    return extraiText(texto);
+    const texto = await fs.promises.readFile(caminhoDoArquivo, encoding)
+    return extraiLinks(texto);
   } catch(erro) {
-    tratErro(erro);
+    trataErro(erro);
   }
 }
 
-
-//function cacthArquiv(caminhArquivo) {
-//  const enconding = 'utf-8'
-//  fs.promises.readFile(caminhArquivo, enconding)
-//  .then((texto) => chalk.green(console.log(texto)))
-//  .catch((erro) => chalk.red(tratErro(erro)))
-//}
-
-//function cacthArquiv(caminhArquivo) {
-//  const enconding = 'utf-8'
-//  fs.readFile(caminhArquivo, enconding, (erro, texto) => {
-//    if(erro) {
-//      tratErro(erro)
-//    }
-//    console.log(chalk.green(texto));
-//  })
-//}
-
-//cacthArquiv('./arquivos/texto1.md')
-
-module.exports = cacthArquiv;
+module.exports = pegaArquivo;
