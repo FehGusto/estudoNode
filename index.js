@@ -8,7 +8,7 @@ function extraiText(texto) {
   while((temp = regex.exec(texto)) !== null) {
     result.push({ [temp[1]]: temp[2] })
   }
-  return result;
+  return result.length === 0 ? 'Sem resultados' : result;
 }
 
 function tratErro(erro) {
@@ -19,7 +19,7 @@ async function cacthArquiv(caminhArquivo) {
   const enconding = 'utf-8'
   try {
     const texto = await fs.promises.readFile(caminhArquivo, enconding)
-    console.log(extraiText(texto))
+    return extraiText(texto);
   } catch(erro) {
     tratErro(erro);
   }
@@ -43,4 +43,6 @@ async function cacthArquiv(caminhArquivo) {
 //  })
 //}
 
-cacthArquiv('./arquivos/texto1.md')
+//cacthArquiv('./arquivos/texto1.md')
+
+module.exports = cacthArquiv;
